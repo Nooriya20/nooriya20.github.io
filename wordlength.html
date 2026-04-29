@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Word Length Finder | Nooriya Ilyas</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+            padding: 20px;
+        }
+
+        .back-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            color: #6c63ff;
+            text-decoration: none;
+            font-size: 0.95rem;
+            font-weight: 600;
+        }
+
+        .back-btn:hover {
+            color: #a78bfa;
+        }
+
+        .card {
+            background: #1c1c1e;
+            border-radius: 30px;
+            padding: 40px;
+            width: 100%;
+            max-width: 480px;
+            box-shadow: 0 30px 80px rgba(0,0,0,0.8);
+        }
+
+        .icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+        }
+
+        h1 {
+            color: white;
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            letter-spacing: -0.5px;
+        }
+
+        .subtitle {
+            color: rgba(255,255,255,0.4);
+            font-size: 0.9rem;
+            margin-bottom: 35px;
+        }
+
+        label {
+            color: rgba(255,255,255,0.6);
+            font-size: 0.85rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        input {
+            width: 100%;
+            background: rgba(255,255,255,0.07);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 15px;
+            padding: 18px 20px;
+            color: white;
+            font-size: 1.1rem;
+            margin-bottom: 25px;
+            outline: none;
+            transition: border 0.3s;
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        input:focus {
+            border-color: #6c63ff;
+        }
+
+        input::placeholder {
+            color: rgba(255,255,255,0.2);
+        }
+
+        button {
+            width: 100%;
+            background: #6c63ff;
+            color: white;
+            border: none;
+            border-radius: 15px;
+            padding: 18px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+            margin-bottom: 10px;
+        }
+
+        button:hover {
+            background: #a78bfa;
+            transform: translateY(-2px);
+        }
+
+        .clear-btn {
+            background: rgba(255,255,255,0.05);
+            color: rgba(255,255,255,0.4);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .clear-btn:hover {
+            background: rgba(255,255,255,0.1);
+            color: white;
+        }
+
+        .results {
+            margin-top: 25px;
+            display: none;
+        }
+
+        .results.show {
+            display: block;
+        }
+
+        .results-title {
+            color: rgba(255,255,255,0.4);
+            font-size: 0.8rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 15px;
+        }
+
+        .word-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 12px;
+            padding: 15px 20px;
+            margin-bottom: 10px;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .word-name {
+            color: white;
+            font-size: 1rem;
+            font-weight: 500;
+        }
+
+        .word-length {
+            background: rgba(108,99,255,0.2);
+            color: #a78bfa;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .summary {
+            margin-top: 15px;
+            padding: 15px 20px;
+            background: rgba(108,99,255,0.1);
+            border: 1px solid rgba(108,99,255,0.2);
+            border-radius: 12px;
+            color: rgba(255,255,255,0.5);
+            font-size: 0.85rem;
+            text-align: center;
+        }
+
+        .summary span {
+            color: #a78bfa;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+
+    <a href="index.html" class="back-btn">← Back to Portfolio</a>
+
+    <div class="card">
+        <div class="icon">📝</div>
+        <h1>Word Length Finder</h1>
+        <p class="subtitle">Type words separated by spaces to find their lengths</p>
+
+        <label>Enter Words</label>
+        <input type="text" id="wordInput" placeholder="e.g. apple banana kiwi cherry" />
+
+        <button onclick="findLengths()">Find Lengths</button>
+        <button class="clear-btn" onclick="clearAll()">Clear</button>
+
+        <div class="results" id="results">
+            <p class="results-title">Results</p>
+            <div id="wordList"></div>
+            <div class="summary" id="summary"></div>
+        </div>
+    </div>
+
+    <script>
+        function findLengths() {
+            const input = document.getElementById('wordInput').value.trim();
+
+            if (!input) {
+                alert('Please enter at least one word!');
+                return;
+            }
+
+            const words = input.split(' ').filter(word => word !== '');
+            const wordList = document.getElementById('wordList');
+            const results = document.getElementById('results');
+            const summary = document.getElementById('summary');
+
+            wordList.innerHTML = '';
+
+            // This is the dictionary mapping words to lengths
+            const wordLengths = {};
+            words.forEach(word => {
+                wordLengths[word] = word.length;
+            });
+
+            // Display each word and its length
+            for (const [word, length] of Object.entries(wordLengths)) {
+                const item = document.createElement('div');
+                item.className = 'word-item';
+                item.innerHTML = `
+                    <span class="word-name">${word}</span>
+                    <span class="word-length">${length} letters</span>
+                `;
+                wordList.appendChild(item);
+            }
+
+            const longestWord = words.reduce((a, b) => a.length > b.length ? a : b);
+            const shortestWord = words.reduce((a, b) => a.length < b.length ? a : b);
+
+            summary.innerHTML = `
+                <span>${words.length}</span> words analyzed • 
+                Longest: <span>${longestWord}</span> • 
+                Shortest: <span>${shortestWord}</span>
+            `;
+
+            results.classList.add('show');
+        }
+
+        function clearAll() {
+            document.getElementById('wordInput').value = '';
+            document.getElementById('wordList').innerHTML = '';
+            document.getElementById('results').classList.remove('show');
+        }
+
+        document.getElementById('wordInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') findLengths();
+        });
+    </script>
+
+</body>
+</html>

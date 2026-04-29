@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pattern Generator | Nooriya Ilyas</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+            padding: 20px;
+        }
+
+        .back-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            color: #6c63ff;
+            text-decoration: none;
+            font-size: 0.95rem;
+            font-weight: 600;
+        }
+
+        .back-btn:hover {
+            color: #a78bfa;
+        }
+
+        .card {
+            background: #1c1c1e;
+            border-radius: 30px;
+            padding: 40px;
+            width: 100%;
+            max-width: 480px;
+            box-shadow: 0 30px 80px rgba(0,0,0,0.8);
+        }
+
+        .icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+        }
+
+        h1 {
+            color: white;
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            letter-spacing: -0.5px;
+        }
+
+        .subtitle {
+            color: rgba(255,255,255,0.4);
+            font-size: 0.9rem;
+            margin-bottom: 35px;
+        }
+
+        label {
+            color: rgba(255,255,255,0.6);
+            font-size: 0.85rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        select, input {
+            width: 100%;
+            background: rgba(255,255,255,0.07);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 15px;
+            padding: 18px 20px;
+            color: white;
+            font-size: 1rem;
+            margin-bottom: 25px;
+            outline: none;
+            transition: border 0.3s;
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+            cursor: pointer;
+        }
+
+        select:focus, input:focus {
+            border-color: #6c63ff;
+        }
+
+        select option {
+            background: #1c1c1e;
+            color: white;
+        }
+
+        button {
+            width: 100%;
+            background: #6c63ff;
+            color: white;
+            border: none;
+            border-radius: 15px;
+            padding: 18px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+            margin-bottom: 10px;
+        }
+
+        button:hover {
+            background: #a78bfa;
+            transform: translateY(-2px);
+        }
+
+        .clear-btn {
+            background: rgba(255,255,255,0.05);
+            color: rgba(255,255,255,0.4);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .clear-btn:hover {
+            background: rgba(255,255,255,0.1);
+            color: white;
+        }
+
+        .output {
+            margin-top: 25px;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 20px;
+            padding: 25px;
+            display: none;
+        }
+
+        .output.show {
+            display: block;
+        }
+
+        .output-title {
+            color: rgba(255,255,255,0.4);
+            font-size: 0.8rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 15px;
+        }
+
+        .pattern-display {
+            font-family: monospace;
+            font-size: 1.2rem;
+            line-height: 1.6;
+            color: #a78bfa;
+            text-align: center;
+            letter-spacing: 3px;
+        }
+
+        .pattern-line {
+            animation: fadeIn 0.1s ease forwards;
+            opacity: 0;
+        }
+
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+
+    <a href="index.html" class="back-btn">← Back to Portfolio</a>
+
+    <div class="card">
+        <div class="icon">⭐</div>
+        <h1>Pattern Generator</h1>
+        <p class="subtitle">Choose a pattern type and size to generate it</p>
+
+        <label>Pattern Type</label>
+        <select id="patternType">
+            <option value="triangle">Triangle ▲</option>
+            <option value="pyramid">Pyramid △</option>
+            <option value="diamond">Diamond ◆</option>
+            <option value="square">Square ■</option>
+            <option value="reverse">Reverse Triangle ▽</option>
+        </select>
+
+        <label>Size (rows)</label>
+        <input type="number" id="size" value="5" min="1" max="15" />
+
+        <button onclick="generatePattern()">Generate Pattern</button>
+        <button class="clear-btn" onclick="clearPattern()">Clear</button>
+
+        <div class="output" id="output">
+            <p class="output-title">Your Pattern</p>
+            <div class="pattern-display" id="patternDisplay"></div>
+        </div>
+    </div>
+
+    <script>
+        function generatePattern() {
+            const type = document.getElementById('patternType').value;
+            const size = parseInt(document.getElementById('size').value);
+
+            if (!size || size < 1 || size > 15) {
+                alert('Please enter a size between 1 and 15!');
+                return;
+            }
+
+            let lines = [];
+
+            if (type === 'triangle') {
+                for (let i = 1; i <= size; i++) {
+                    lines.push('★'.repeat(i));
+                }
+            } else if (type === 'pyramid') {
+                for (let i = 1; i <= size; i++) {
+                    const spaces = ' '.repeat(size - i);
+                    const stars = '★'.repeat(2 * i - 1);
+                    lines.push(spaces + stars);
+                }
+            } else if (type === 'diamond') {
+                for (let i = 1; i <= size; i++) {
+                    const spaces = ' '.repeat(size - i);
+                    const stars = '★'.repeat(2 * i - 1);
+                    lines.push(spaces + stars);
+                }
+                for (let i = size - 1; i >= 1; i--) {
+                    const spaces = ' '.repeat(size - i);
+                    const stars = '★'.repeat(2 * i - 1);
+                    lines.push(spaces + stars);
+                }
+            } else if (type === 'square') {
+                for (let i = 0; i < size; i++) {
+                    lines.push('★'.repeat(size));
+                }
+            } else if (type === 'reverse') {
+                for (let i = size; i >= 1; i--) {
+                    const spaces = ' '.repeat(size - i);
+                    lines.push(spaces + '★'.repeat(i));
+                }
+            }
+
+            const display = document.getElementById('patternDisplay');
+            display.innerHTML = '';
+
+            lines.forEach((line, index) => {
+                const div = document.createElement('div');
+                div.className = 'pattern-line';
+                div.textContent = line;
+                div.style.animationDelay = `${index * 0.05}s`;
+                display.appendChild(div);
+            });
+
+            document.getElementById('output').classList.add('show');
+        }
+
+        function clearPattern() {
+            document.getElementById('patternDisplay').innerHTML = '';
+            document.getElementById('output').classList.remove('show');
+            document.getElementById('size').value = '5';
+        }
+    </script>
+
+</body>
+</html>
